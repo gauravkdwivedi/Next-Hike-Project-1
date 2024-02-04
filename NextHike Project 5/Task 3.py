@@ -113,6 +113,30 @@ print("Distribution of Average TCP Retransmission per Handset Type:")
 print(avg_tcp_retransmission_by_handset)
 print("\n------------------------\n")
 
+# Compute and report the top 10 handsets based on average throughput per handset type
+top_avg_throughput_by_handset = experience_metrics.groupby('Handset_Type')['Avg_Throughput'].mean().nlargest(10)
+
+# Create a bar chart for top average throughput
+plt.figure(figsize=(10, 6))
+top_avg_throughput_by_handset.plot(kind='bar', color='skyblue')
+plt.title('Top 10 Handsets based on Average Throughput per Handset Type')
+plt.xlabel('Handset Type')
+plt.ylabel('Average Throughput')
+plt.xticks(rotation=45, ha='right')
+plt.show()
+
+# Compute and report the top 10 handsets based on average TCP retransmission per handset type
+top_avg_tcp_retransmission_by_handset = experience_metrics.groupby('Handset_Type')['Avg_TCP_Retransmission'].mean().nlargest(10)
+
+# Create a bar chart for top average TCP retransmission
+plt.figure(figsize=(10, 6))
+top_avg_tcp_retransmission_by_handset.plot(kind='bar', color='salmon')
+plt.title('Top 10 Handsets based on Average TCP Retransmission per Handset Type')
+plt.xlabel('Handset Type')
+plt.ylabel('Average TCP Retransmission')
+plt.xticks(rotation=45, ha='right')
+plt.show()
+
 
 ## Task 3.4
 
