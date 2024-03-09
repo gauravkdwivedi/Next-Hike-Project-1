@@ -42,8 +42,7 @@ if __name__ == "__main__":
     # Check if there are articles in the list
     if python_articles:
         # Print the header
-        print("Latest article in the python section:")
-        
+        print("Latest article in the python section:")       
         # Loop through the articles and print each one with an index
         for index, article in enumerate(python_articles, 1):
             print(f"{index}. {article}")
