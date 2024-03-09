@@ -1,3 +1,4 @@
+# Import necessary liabraries
 import requests
 from bs4 import BeautifulSoup
 # Send an HTTP GET request to the Wikipedia page
