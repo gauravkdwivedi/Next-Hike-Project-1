@@ -1,13 +1,13 @@
-# Import the required liabraries
+# Import the required libraries
 import requests
 from bs4 import BeautifulSoup
 
 # Define a function to get the titles of the latest articles on python.org
 def get_latest_articles():
-    # The URL of the "Python.org" website
+    # The URL of the Python.org website
     url = "https://www.python.org/"
     
-    # Send an HTTP GET request to the URL
+    # Send an HTTP GET request to the specified URL
     response = requests.get(url)
 
     # Check if the request was successful (status code 200)
@@ -15,38 +15,38 @@ def get_latest_articles():
         # Parse the HTML content of the page using BeautifulSoup
         soup = BeautifulSoup(response.text, "html.parser")
         
-        # Create an empty list to store the titles of the latest articles
-        latest_articles = []
+        # Initialize an empty list to store the titles of the latest articles
+        article_titles = []
 
-        # Use a CSS selector to locate article titles within list items
+        # Use a CSS selector to locate the article titles within the blog widget
         for article in soup.select(".blog-widget li"):
             # Extract and strip the text content of the 'a' element
-            title = article.a.text.strip()
+            title = article.a.get_text(strip=True)
             
-            # Add the title to the list of latest articles
-            latest_articles.append(title)
+            # Add the cleaned title to the list of article titles
+            article_titles.append(title)
 
-        # Return the list of latest article titles
-        return latest_articles
+        # Return the list of article titles
+        return article_titles
     else:
-        # Print an error message if the request was not successful
+        # Print an error message if the request was unsuccessful
         print(f"Failed to retrieve data. Status code: {response.status_code}")
-        # Return an empty list to indicate no articles were found
+        # Return an empty list to indicate that no articles were found
         return []
 
 # Main script execution
 if __name__ == "__main__":
-    # Call the get_latest_articles() function to retrieve article titles
+    # Retrieve the latest article titles by calling the get_latest_articles() function
     python_articles = get_latest_articles()
 
-    # Check if there are articles in the list
+    # Check if any articles were retrieved
     if python_articles:
-        # Print the header
-        print("Latest article in the python section:")
+        # Print a header for the list of articles
+        print("Latest articles on Python.org:")
         
-        # Loop through the articles and print each one with an index
-        for index, article in enumerate(python_articles, 1):
+        # Iterate through the list of articles and print each one with its index
+        for index, article in enumerate(python_articles, start=1):
             print(f"{index}. {article}")
     else:
         # Print a message if no articles were found
-        print("No article found")
+        print("No articles found.")
