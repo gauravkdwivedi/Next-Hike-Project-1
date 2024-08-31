@@ -4,29 +4,28 @@ This project is designed to scrape content from websites and analyze the frequen
 
 ## Project Structure
 
-1. **WebScrapingPython.py**:
+### 1. **WebScrapingPython.py**
    - **Purpose**: This script is responsible for web scraping and data extraction.
    - **Functionality**:
      - Uses libraries like `BeautifulSoup` and `requests` to gather data from websites.
-     - Extracts textual content from the specified URLs.
-     - Saves the scraped data for further processing.
+     - Extracts textual content from the specified URL (Python.org in this case).
+     - Returns the titles of the latest articles found on the webpage.
    - **Dependencies**:
      - `BeautifulSoup` for parsing HTML.
      - `requests` for making HTTP requests.
 
-2. **WordCount.py**:
+### 2. **WordCount.py**
    - **Purpose**: This script processes the data obtained from the `WebScrapingPython.py` script.
    - **Functionality**:
-     - Reads the text data scraped from websites.
-     - Calculates and displays the frequency of each word in the content.
-     - Provides insights into the most common words on a web page.
+     - Retrieves the latest article titles using the `WebScrapingPython` module.
+     - Counts and displays the frequency of each word found in the article titles.
+     - Provides insights into the most common words in the titles.
    - **Dependencies**:
      - `collections.Counter` for counting word occurrences.
-     - `re` for text processing.
 
 ## Installation
 
-To get started with this project, you'll need to clone the repository and install the required Python libraries.
+To get started with this project, follow these steps:
 
 1. **Clone the repository**:
    ```bash
