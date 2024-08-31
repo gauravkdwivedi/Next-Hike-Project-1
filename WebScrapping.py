@@ -1,43 +1,61 @@
 import requests
 from bs4 import BeautifulSoup
-# Send an HTTP GET request to the Wikipedia page
-url = "https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Italy"
-response = requests.get(url)
-
-# Check if the request was successful
-if response.status_code == 200:
-    # Parse the HTML content
-    soup = BeautifulSoup(response.text, "html.parser")
-    
-    # Extract the introduction section
-    introduction_paragraphs = soup.find_all("p")
-    introduction = "\n".join([p.get_text() for p in introduction_paragraphs])
-    
-    print("Introduction:", introduction)
-else:
-    print("Failed to retrieve the web page.")
-
-# Word count
 from collections import Counter
+import string
 
-# Text
-introduction = introduction
+# Function to fetch the introduction section from a Wikipedia page
+def fetch_introduction(url):
+    try:
+        # Send an HTTP GET request to the specified URL
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an error for bad responses
 
-# Split the text into words
-words = introduction.split()
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(response.text, "html.parser")
+        
+        # Extract all paragraphs in the introduction section
+        introduction_paragraphs = soup.find_all("p")
+        
+        # Join the text from all paragraphs into a single string
+        introduction = "\n".join([p.get_text() for p in introduction_paragraphs])
+        
+        return introduction
+    
+    except requests.exceptions.RequestException as e:
+        # Handle errors during the HTTP request
+        print(f"Error fetching the page: {e}")
+        return None
 
-# Create a Counter object to count word frequencies
-word_count = Counter()
+# Function to count word frequencies in a text
+def count_word_frequencies(text):
+    # Remove punctuation and convert the text to lowercase
+    translator = str.maketrans("", "", string.punctuation)
+    words = text.translate(translator).lower().split()
 
-# Iterate through the words and count their frequencies
-for word in words:
-    # Remove punctuation and convert to lowercase to ensure consistency
-    word = word.strip(".,!?'\"").lower()
-    word_count[word] += 1
+    # Use Counter to count the frequency of each word
+    word_count = Counter(words)
+    
+    # Sort the words by frequency in descending order
+    sorted_word_count = word_count.most_common()
+    
+    return sorted_word_count
 
-# Sort the words by frequency in descending order
-sorted_word_count = word_count.most_common()
-
-# Print the sorted word count
-for word, count in sorted_word_count:
-    print(f"{word}: {count}")
+# Main execution block
+if __name__ == "__main__":
+    # Wikipedia URL for the COVID-19 pandemic in Italy page
+    url = "https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Italy"
+    
+    # Fetch the introduction section of the Wikipedia page
+    introduction = fetch_introduction(url)
+    
+    if introduction:
+        # Display the introduction text
+        print("Introduction:\n", introduction)
+        
+        # Count and display word frequencies in the introduction
+        word_frequencies = count_word_frequencies(introduction)
+        print("\nWord Frequencies:")
+        for word, count in word_frequencies:
+            print(f"{word}: {count}")
+    else:
+        print("Failed to retrieve the introduction.")
