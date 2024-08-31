@@ -2,6 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 
 def get_latest_articles():
+    """
+    Fetches the latest articles from the Python.org blog page.
+    
+    Returns:
+        list: A list of tuples where each tuple contains:
+            - Article index (int)
+            - Article title (str)
+            - Article URL (str)
+    """
     url = "https://www.python.org/"
     response = requests.get(url)
 
@@ -9,9 +18,11 @@ def get_latest_articles():
         soup = BeautifulSoup(response.text, "html.parser")
         latest_articles = []
 
+        # Extract article titles and URLs from the blog widget
         for article_index, article in enumerate(soup.select(".blog-widget li"), 1):
             title = article.a.text.strip()
-            latest_articles.append((article_index, title, article.a["href"]))
+            href = article.a["href"]
+            latest_articles.append((article_index, title, href))
 
         return latest_articles
     else:
@@ -19,6 +30,15 @@ def get_latest_articles():
         return []
 
 def get_article_by_number(article_number):
+    """
+    Retrieves the content of a specific article based on its number.
+    
+    Args:
+        article_number (int or str): The number of the article to retrieve.
+    
+    Returns:
+        dict: A dictionary with the article title and content or error messages.
+    """
     articles = get_latest_articles()
     
     if articles:
@@ -28,16 +48,15 @@ def get_article_by_number(article_number):
                 selected_article = articles[article_number - 1]
                 article_title = selected_article[1]
                 article_url = selected_article[2]
-                
+
+                # Fetch and parse the selected article
                 article_response = requests.get(article_url)
                 if article_response.status_code == 200:
                     article_soup = BeautifulSoup(article_response.text, "html.parser")
                     content = article_soup.find("div", class_="article-content")
-                    if content:
-                        article_content = content.get_text()
-                    else:
-                        article_content = "Content not found."
 
+                    article_content = content.get_text() if content else "Content not found."
+                    
                     return {
                         "title": article_title,
                         "content": article_content
@@ -67,7 +86,7 @@ if __name__ == "__main__":
     python_articles = get_latest_articles()
 
     if python_articles:
-        print("Latest articles in the python section:")
+        print("Latest articles in the Python section:")
         for index, article in enumerate(python_articles, 1):
             print(f"{index}. {article[1]}")
 
@@ -78,4 +97,4 @@ if __name__ == "__main__":
         print("Content:")
         print(article_data['content'])
     else:
-        print("No articles found")
+        print("No articles found.")
