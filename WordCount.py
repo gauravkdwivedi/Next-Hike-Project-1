@@ -1,28 +1,52 @@
-# Word count
-# Import the necessary libraries and files
+# Word Count Script
+# This script counts the frequency of words in the titles of the latest articles from a web scraping module.
+
 from collections import Counter
-import WebScappingPython
+import WebScappingPython  # Ensure this module contains the `get_latest_articles` function
 
-python_articles = WebScappingPython.get_latest_articles()
-# Combine all article titles into a single string
-all_titles = " ".join(python_articles)
+def count_word_frequencies(titles):
+    """
+    Count word frequencies from a list of article titles.
 
-# Split the text into words
-words = all_titles.split()
+    Args:
+        titles (list of str): List of article titles.
 
-# Create a Counter object to count word frequencies
-word_count = Counter()
+    Returns:
+        list of tuple: Sorted list of tuples containing word and its frequency.
+    """
+    # Combine all titles into a single string
+    all_titles = " ".join(titles)
 
-# Iterate through the words and count their frequencies
-for word in words:
-    # Remove punctuation and convert to lowercase to ensure consistency
-    word = word.strip(".,!?'\"").lower()
-    if word:
-        word_count[word] += 1
+    # Remove punctuation and convert to lowercase
+    translator = str.maketrans("", "", ".,!?'\"")
+    cleaned_titles = all_titles.translate(translator).lower()
 
-# Sort the words by frequency in descending order
-sorted_word_count = word_count.most_common()
+    # Split the text into words
+    words = cleaned_titles.split()
 
-# Print the sorted word count
-for word, count in sorted_word_count:
-    print(f"{word}: {count}")
+    # Count word frequencies
+    word_count = Counter(words)
+
+    # Return sorted word count
+    return word_count.most_common()
+
+def main():
+    # Retrieve latest article titles
+    python_articles = WebScappingPython.get_latest_articles()
+
+    if python_articles:
+        # Extract article titles from the data
+        titles = [article[1] for article in python_articles]
+
+        # Count word frequencies
+        sorted_word_count = count_word_frequencies(titles)
+
+        # Print the sorted word count
+        print("Word frequencies in article titles:")
+        for word, count in sorted_word_count:
+            print(f"{word}: {count}")
+    else:
+        print("No articles found. Unable to perform word count.")
+
+if __name__ == "__main__":
+    main()
